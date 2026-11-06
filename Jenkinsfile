@@ -52,16 +52,8 @@ pipeline {
     }
     post {
             always {
-                junit allowEmptyResults: true, testResults: '$REPORT_DIR/*.xml'
-                junit(
-                    allowEmptyResults: true,
-                    testResults: '$REPORT_DIR/*.xml'
-                )
-                archiveArtifacts(
-                    allowEmptyArchive: true,
-                    artifacts: 'dist/*.xml',
-                    fingerprint: true
-                )
+                junit allowEmptyResults: true, testResults: "${env.REPORT_DIR}/*.xml"
+                archiveArtifacts allowEmptyArchive: true, artifacts: "dist/**", fingerprint: true
             }
         }
 }
