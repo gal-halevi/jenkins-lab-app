@@ -14,6 +14,8 @@ pipeline {
     environment {
         VENV_DIR = '.venv/bin'
         REPORT_DIR = 'reports'
+        RUFF_REPORT = "${env.REPORT_DIR}/ruff-report.xml"
+        PYTEST_REPORT = "${env.REPORT_DIR}/pytest-report.xml"
     }
 
     stages {
@@ -43,23 +45,32 @@ pipeline {
                 sh '$VENV_DIR/ruff check . --output-format junit > $REPORT_DIR/ruff-report.xml'
             }
         }
+        post {
+            always {
+                junit testResults: "${env.RUFF_REPORT}"
+            }
+        }
 
         stage('Run Tests') {
             steps {
                 sh '$VENV_DIR/pytest --junitxml=$REPORT_DIR/pytest-report.xml tests/'
             }
         }
+        post {
+            always {
+                junit testResults: "${env.PYTEST_REPORT}"
+            }
+        }
 
-        stage('Build') {
+        stage('Package') {
             steps {
                 sh '$VENV_DIR/python -m build'
             }
         }
-    }
-    post {
-            always {
-                junit allowEmptyResults: true, testResults: "${env.REPORT_DIR}/*.xml"
-                archiveArtifacts allowEmptyArchive: true, artifacts: "dist/**", fingerprint: true
+        post {
+            success {
+                archiveArtifacts artifacts: "dist/**", fingerprint: true
             }
         }
+    }
 }
