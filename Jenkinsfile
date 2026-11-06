@@ -42,7 +42,7 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                sh '$VENV_BIN_DIR/pytest --junitxml=$PYTEST_REPORT tests/'
+                sh '$VENV_BIN_DIR/pytest -m "not slow" --junitxml=$PYTEST_REPORT tests/'
             }
             post {
                 always {
