@@ -12,7 +12,7 @@ pipeline {
     }
 
     environment {
-        VENV_DIR = '.venv/bin'
+        VENV_BIN_DIR = '.venv/bin'
         REPORT_DIR = 'reports'
         RUFF_REPORT = "${env.REPORT_DIR}/ruff-report.xml"
         PYTEST_REPORT = "${env.REPORT_DIR}/pytest-report.xml"
@@ -24,25 +24,20 @@ pipeline {
             steps {
                 deleteDir()
                 checkout scm
+                sh 'mkdir -p $REPORT_DIR'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh 'python3 -m venv .venv'
-                sh '$VENV_DIR/pip install -r requirements-dev.txt . --no-deps'
-            }
-        }
-
-        stage('Create Reports Directory') {
-            steps {
-                sh 'mkdir -p $REPORT_DIR'
+                sh 'python3 -m venv $(dirname "$VENV_BIN_DIR")'
+                sh '$VENV_BIN_DIR/pip install -r requirements-dev.txt . --no-deps'
             }
         }
 
         stage('Lint') {
             steps {
-                sh '$VENV_DIR/ruff check . --output-format junit > $REPORT_DIR/ruff-report.xml'
+                sh '$VENV_BIN_DIR/ruff check . --output-format junit > $RUFF_REPORT'
             }
             post {
                 always {
@@ -53,7 +48,7 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                sh '$VENV_DIR/pytest --junitxml=$REPORT_DIR/pytest-report.xml tests/'
+                sh '$VENV_BIN_DIR/pytest --junitxml=$PYTEST_REPORT tests/'
             }
             post {
                 always {
@@ -64,7 +59,7 @@ pipeline {
 
         stage('Package') {
             steps {
-                sh '$VENV_DIR/python -m build'
+                sh '$VENV_BIN_DIR/python -m build'
             }
             post {
                 success {
