@@ -14,7 +14,6 @@ pipeline {
     environment {
         VENV_BIN_DIR = '.venv/bin'
         REPORT_DIR = 'reports'
-        RUFF_REPORT = "${env.REPORT_DIR}/ruff-report.xml"
         PYTEST_REPORT = "${env.REPORT_DIR}/pytest-report.xml"
     }
 
@@ -37,12 +36,7 @@ pipeline {
 
         stage('Lint') {
             steps {
-                sh '$VENV_BIN_DIR/ruff check . --output-format junit > $RUFF_REPORT'
-            }
-            post {
-                always {
-                    junit testResults: "${env.RUFF_REPORT}"
-                }
+                sh '$VENV_BIN_DIR/ruff check . && $VENV_BIN_DIR/ruff format --check .'
             }
         }
 
