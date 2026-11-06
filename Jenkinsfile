@@ -13,8 +13,7 @@ pipeline {
 
     environment {
         VENV_BIN_DIR = '.venv/bin'
-        REPORT_DIR = 'reports'
-        PYTEST_REPORT = "${env.REPORT_DIR}/pytest-report.xml"
+        PYTEST_REPORT = "reports/pytest-report.xml"
     }
 
     stages {
@@ -23,7 +22,6 @@ pipeline {
             steps {
                 deleteDir()
                 checkout scm
-                sh 'mkdir -p $REPORT_DIR'
             }
         }
 
