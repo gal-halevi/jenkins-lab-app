@@ -44,10 +44,10 @@ pipeline {
             steps {
                 sh '$VENV_DIR/ruff check . --output-format junit > $REPORT_DIR/ruff-report.xml'
             }
-        }
-        post {
-            always {
-                junit testResults: "${env.RUFF_REPORT}"
+            post {
+                always {
+                    junit testResults: "${env.RUFF_REPORT}"
+                }
             }
         }
 
@@ -55,10 +55,10 @@ pipeline {
             steps {
                 sh '$VENV_DIR/pytest --junitxml=$REPORT_DIR/pytest-report.xml tests/'
             }
-        }
-        post {
-            always {
-                junit testResults: "${env.PYTEST_REPORT}"
+            post {
+                always {
+                    junit testResults: "${env.PYTEST_REPORT}"
+                }
             }
         }
 
@@ -66,10 +66,10 @@ pipeline {
             steps {
                 sh '$VENV_DIR/python -m build'
             }
-        }
-        post {
-            success {
-                archiveArtifacts artifacts: "dist/**", fingerprint: true
+            post {
+                success {
+                    archiveArtifacts artifacts: "dist/**", fingerprint: true
+                }
             }
         }
     }
