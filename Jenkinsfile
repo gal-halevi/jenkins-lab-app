@@ -8,6 +8,7 @@ pipeline {
         timestamps()
         timeout(time: 10, unit: 'MINUTES')
         disableConcurrentBuilds()
+        skipDefaultCheckout()
     }
 
     environment {
@@ -17,7 +18,12 @@ pipeline {
 
     stages {
 
-        // skipping the checkout stage since the code is already checked out by Jenkins in declarative pipeline
+        stage('Clean & Checkout') {
+            steps {
+                deleteDir()
+                checkout scm
+            }
+        }
 
         stage('Install Dependencies') {
             steps {
