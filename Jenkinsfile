@@ -49,15 +49,10 @@ pipeline {
                 sh '$VENV_DIR/python -m build'
             }
         }
-
-        stage('Package') {
-            steps {
-                sh 'twine upload dist/*'
-            }
-        }
     }
     post {
             always {
+                junit allowEmptyResults: true, testResults: '$REPORT_DIR/*.xml'
                 junit(
                     allowEmptyResults: true,
                     testResults: '$REPORT_DIR/*.xml'
