@@ -12,7 +12,6 @@ pipeline {
     }
 
     environment {
-        VENV_BIN_DIR = '.venv/bin'
         PYTEST_REPORT = "reports/pytest-report.xml"
     }
 
@@ -27,19 +26,19 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'ci/setup.sh "$VENV_BIN_DIR"'
+                sh 'ci/setup.sh'
             }
         }
 
         stage('Lint') {
             steps {
-                sh '$VENV_BIN_DIR/ruff check . && $VENV_BIN_DIR/ruff format --check .'
+                sh 'ci/lint.sh'
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh '$VENV_BIN_DIR/pytest -m "not slow" --junitxml=$PYTEST_REPORT tests/'
+                sh 'ci/test.sh'
             }
             post {
                 always {
@@ -50,7 +49,7 @@ pipeline {
 
         stage('Package') {
             steps {
-                sh '$VENV_BIN_DIR/python -m build'
+                sh 'ci/package.sh'
             }
             post {
                 success {
