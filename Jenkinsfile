@@ -27,8 +27,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'python3 -m venv $(dirname "$VENV_BIN_DIR")'
-                sh '$VENV_BIN_DIR/pip install -r requirements-dev.txt . --no-deps'
+                sh 'ci/setup.sh "$VENV_BIN_DIR"'
             }
         }
 
