@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-if [[ $# -ne 1 ]]; then
-    echo "Usage: $0 <venv_bin_dir>"
-    exit 1
-fi
+require_venv
 
-VENV_BIN_DIR="$1"
-python3.12 -m venv "$(dirname "$VENV_BIN_DIR")"
-"$VENV_BIN_DIR/pip" install -r requirements-dev.txt . --no-deps
+python3.12 -m venv "$(dirname "$VENV_DIR")"
+"$VENV_BIN/pip" install -r requirements-dev.txt . --no-deps
