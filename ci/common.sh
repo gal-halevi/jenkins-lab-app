@@ -8,6 +8,8 @@ cd "$REPO_ROOT" || exit 1
 VENV_DIR="${VENV_DIR:-.venv}"
 VENV_BIN="$VENV_DIR/bin"
 
+log() { printf '==> %s\n' "$*" >&2; }
+
 # Fail early with a useful message instead of "command not found" halfway through.
 require_venv() {
     [[ -x "$VENV_BIN/python" ]] || { log "No venv at $VENV_DIR. Run ci/setup.sh first."; exit 1; }
