@@ -24,6 +24,12 @@ pipeline {
             }
         }
 
+        stage('Lint CI Scripts') {
+            steps {
+                sh 'ci/shellcheck.sh'
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
                 sh 'ci/setup.sh'
