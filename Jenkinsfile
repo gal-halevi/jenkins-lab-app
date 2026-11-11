@@ -39,8 +39,12 @@ pipeline {
         stage('Version') {
             steps {
                 script {
-                    env.APP_VERSION = sh(script: 'ci/version.sh', returnStdout: true).trim()
-                    currentBuild.displayName = "${env.APP_VERSION} #${env.BUILD_NUMBER}"
+                    def version = sh(script: 'ci/version.sh', returnStdout: true).trim()
+                    if (!version) {
+                        error('ci/version.sh printed no version')
+                    }
+                    env.APP_VERSION = version
+                    currentBuild.displayName = "${version} #${env.BUILD_NUMBER}"
                 }
             }
         }
