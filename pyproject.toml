@@ -13,6 +13,9 @@ dependencies = ["flask>=3.1,<4", "gunicorn>=23"]
 where = ["src"]
 
 [tool.setuptools_scm]
+# Only annotated tags matching v[0-9]* count as releases (no --tags = lightweight tags ignored).
+# Keep the pattern in sync with TAG_PATTERN in ci/version.sh.
+git_describe_command = ["git", "describe", "--dirty", "--long", "--match", "v[0-9]*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
