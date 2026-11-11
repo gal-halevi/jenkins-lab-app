@@ -36,6 +36,15 @@ pipeline {
             }
         }
 
+        stage('Version') {
+            steps {
+                script {
+                    env.APP_VERSION = sh(script: 'ci/version.sh', returnStdout: true).trim()
+                    currentBuild.displayName = "${env.APP_VERSION} #${env.BUILD_NUMBER}"
+                }
+            }
+        }
+
         stage('Lint') {
             steps {
                 sh 'ci/lint.sh'
