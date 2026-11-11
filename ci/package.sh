@@ -5,4 +5,4 @@ source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
 require_venv
 
-"$VENV_BIN/python" -m build
+"$VENV_BIN/python" -m build --no-isolation --wheel

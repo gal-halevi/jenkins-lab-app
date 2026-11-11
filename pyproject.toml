@@ -1,16 +1,18 @@
 [build-system]
-requires = ["setuptools>=75", "wheel"]
+requires = ["setuptools>=75", "setuptools-scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "labapp"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Small HTTP service used to practice Jenkins pipelines"
 requires-python = ">=3.12"
 dependencies = ["flask>=3.1,<4", "gunicorn>=23"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools_scm]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

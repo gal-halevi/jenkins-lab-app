@@ -12,5 +12,6 @@ command -v "$PYTHON" >/dev/null || {
 
 log "Creating $VENV_DIR with $("$PYTHON" --version)"
 "$PYTHON" -m venv --clear "$VENV_DIR"
-"$VENV_BIN/pip" install -r requirements-dev.txt . --no-deps
+"$VENV_BIN/pip" install -r requirements-dev.txt --no-deps
+"$VENV_BIN/pip" install . --no-deps --no-build-isolation
 "$VENV_BIN/pip" check
