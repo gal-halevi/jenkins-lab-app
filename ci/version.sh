@@ -20,3 +20,5 @@ if ! git describe --match "$TAG_PATTERN" >/dev/null 2>&1; then
     fi
     exit 1
 fi
+
+"$VENV_BIN/python" -m setuptools_scm
