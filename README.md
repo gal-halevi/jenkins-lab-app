@@ -88,6 +88,15 @@ The version comes from **git tags**, via setuptools-scm; there is no version num
 Release tags are annotated (`git tag -a v0.2.0 -m "Release 0.2.0"`), pushed by name, and never moved
 or deleted once pushed.
 
+**Only annotated tags matching `v[0-9]*` count.** Other tags (deploy markers, dates, lightweight tags)
+are ignored, so they can't change the version. The pattern lives in two places that must stay in sync:
+`git_describe_command` in `pyproject.toml` (what setuptools-scm uses) and `TAG_PATTERN` in `ci/version.sh`
+(the guard).
+
+`ci/version.sh` prints the version, and **fails the build** if no such tag is reachable, instead of
+letting setuptools-scm invent a `0.1.devN` version. In CI that usually means the checkout didn't fetch
+tags or was shallow; the error message says which.
+
 Check the version on each layer:
 
 ```bash
