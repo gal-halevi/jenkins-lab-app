@@ -52,23 +52,27 @@ pipeline {
                     }
                 }
 
-                stage('Lint') {
-                    steps {
-                        sh 'ci/lint.sh'
-                    }
-                }
-
-                stage('Run Tests') {
-                    steps {
-                        sh 'ci/test.sh'
-                    }
-                    post {
-                        always {
-                            junit testResults: "${env.PYTEST_REPORT}"
+                stage('Checks') {
+                    failFast true
+                    parallel {
+                        stage('Lint') {
+                            steps {
+                                sh 'ci/lint.sh'
+                            }
+                        }
+                        stage('Run Tests') {
+                            steps {
+                                sh 'ci/test.sh'
+                            }
+                            post {
+                                always {
+                                    junit testResults: "${env.PYTEST_REPORT}"
+                                }
+                            }
                         }
                     }
                 }
-
+                
                 stage('Package') {
                     steps {
                         sh 'ci/package.sh'
