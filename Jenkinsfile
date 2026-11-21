@@ -97,12 +97,8 @@ pipeline {
                 stage('Package') {
                     steps {
                         sh 'ci/package.sh'
-                    }
-                    post {
-                        success {
-                            archiveArtifacts artifacts: "dist/**", fingerprint: true
-                            stash name: 'verify', includes: 'dist/**,requirements.txt,.python-version,ci/verify.sh,ci/common.sh'
-                        }
+                        archiveArtifacts artifacts: "dist/**", fingerprint: true
+                        stash name: 'verify', includes: 'dist/**,requirements.txt,.python-version,ci/verify.sh,ci/common.sh'
                     }
                 }
             }
