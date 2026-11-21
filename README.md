@@ -69,8 +69,17 @@ python3.12 -m venv --clear /tmp/lockvenv
 ```
 
 The output is exactly the lines to add: to `requirements.txt` for a runtime dependency (and to
-`dependencies` in `pyproject.toml`), to `requirements-dev.txt` for a tool. If it shows an existing
-package at a new version, something changed that you didn't ask for: look before committing.
+`dependencies` in `pyproject.toml`), to `requirements-dev.txt` for a tool.
+
+Before adding them, check that no **existing** package changed version:
+
+```bash
+diff <(grep -h '==' requirements.txt requirements-dev.txt | sort -f) \
+     <(/tmp/lockvenv/bin/pip freeze | sort -f)
+```
+
+Lines with only `>` are new packages. A `<` / `>` pair for the same name is an existing package at
+a new version: something changed that you didn't ask for, so look before committing.
 
 **Upgrading**: a deliberate change of its own, in its own commit. Install the top-level packages
 unpinned in a clean venv, freeze, and review the diff. Prefer releases that are a few weeks old.
