@@ -93,7 +93,7 @@ pipeline {
                         }
                     }
                 }
-                
+
                 stage('Package') {
                     steps {
                         sh 'ci/package.sh'
