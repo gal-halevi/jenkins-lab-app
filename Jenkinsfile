@@ -70,6 +70,27 @@ pipeline {
                                 }
                             }
                         }
+                        stage('Security') {
+                            steps {
+                                script {
+                                    // ci/security.sh: 0 = clean, 3 = warnings only, anything else = failure
+                                    def rc = sh(script: 'ci/security.sh', returnStatus: true)
+                                    if (rc == 3) {
+                                        unstable('Security findings below the blocking threshold: see the log and reports/')
+                                    } else if (rc != 0) {
+                                        error("Security checks failed (exit ${rc})")
+                                    }
+                                }
+                            }
+                            post {
+                                always {
+                                    // Empty allowed on purpose: if security.sh stops before writing a report
+                                    // (e.g. jq missing), its own error already explains why.
+                                    archiveArtifacts artifacts: 'reports/pip-audit-*.json,reports/bandit.json',
+                                                     allowEmptyArchive: true
+                                }
+                            }
+                        }
                     }
                 }
                 
