@@ -8,7 +8,7 @@ require_venv
 # Package only committed code. A modified tracked file would put uncommitted code in the
 # wheel, and setuptools-scm would give it a different version (.d<date>) than the Version stage.
 if [[ "${ALLOW_DIRTY:-0}" != 1 ]]; then
-    changed=$(git status --porcelain --untracked-files=no)
+    changed=$(git status --porcelain)
     if [[ -n "$changed" ]]; then
         log "Refusing to package: tracked files differ from commit $(git rev-parse --short HEAD):"
         printf '%s\n' "$changed" | sed 's/^/    /' >&2
